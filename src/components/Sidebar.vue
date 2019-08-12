@@ -1,5 +1,5 @@
 <template>
-	<div id="sidebar" :style="{'width': !isCollapse?'201px':'65px'}">
+	<div id="sidebar" :style="{'width': !isCollapse?'150px':'65px'}">
 		<!-- <div class="shrink" @click="shrinkFN">{{shrink}}</div> -->
 		<div class="logos">
 			<div class="logo">
@@ -25,7 +25,11 @@
 				<i class="el-icon-menu"></i>
 				<span slot="title">首页</span>
 			</el-menu-item> -->
-			<el-submenu index="/finance">
+			<el-menu-item index="/bill">
+				<i class="el-icon-menu"></i>
+				<span slot="title">财务管理</span>
+			</el-menu-item>
+			<!-- <el-submenu index="/finance">
 				<template slot="title">
 					<i class="el-icon-document"></i>
 					<span>财务管理</span>
@@ -33,7 +37,7 @@
 				<el-menu-item-group>
 				<el-menu-item index="/finance/bill">账单中心</el-menu-item>
 				</el-menu-item-group>
-			</el-submenu>
+			</el-submenu> -->
 			<!-- <el-menu-item index="/setting">
 				<i class="el-icon-setting"></i>
 				<span slot="title">设置</span>
@@ -62,7 +66,7 @@ export default {
 		shrinkFN(){
 			this.isCollapse=!this.isCollapse;
 			this.shrink = this.isCollapse?'》':'《 '
-			this.$store.dispatch('setMarginLeft', !this.isCollapse?'201px':'65px')
+			this.$store.dispatch('setMarginLeft', !this.isCollapse?'150px':'65px')
 		},
 	}
 }
@@ -84,21 +88,22 @@ export default {
 		border-right: solid 1px #e6e6e6;
 		.logos {
 			height: 54px;
-			width: 201px;
+			width: 150px;
 			.logo {
-				width: 34px;
-				height: 34px;
-				overflow: hidden;
-				padding-top: 10px;
-				padding-left: 10px;
-				float: left;
+				width: 24px;
+			    height: 24px;
+			    overflow: hidden;
+			    padding-top: 15px;
+			    padding-left: 5px;
+			    float: left;
 			}
 			.title {
 				height: 54px;
 				line-height: 54px;
 				float: left;
-				padding-left: 10px;
+				padding-left: 5px;
 				color: #fff;
+				font-size: 12px;
 			}
 		}
 		.el-menu {
@@ -115,5 +120,9 @@ export default {
 		.shrink:hover{
 			cursor:pointer;
 		}
+	}
+	.el-submenu .el-menu-item{
+		padding: 0 45px!important;
+		min-width: 150px!important;
 	}
 </style>

@@ -43,7 +43,7 @@ export default {
     }
     /*表格该行处于什么状态的颜色*/
     .danger-row {
-        background-color: #fdaaaa!important;
+        background-color: red!important;
         .text-color{
             color:#FF6443;
         }
@@ -57,6 +57,17 @@ export default {
         .text-color{
             color:#ECD994;
         }
+    }
+    /*单元表格内字体颜色*/
+    .el-table--mini td {
+        padding: 0px 0;
+        color: #277dbe;
+        font-size:10px;
+    }
+
+    /*message*/
+    .el-message {
+        min-width: 220px;
     }
 
     /* 对话框 */

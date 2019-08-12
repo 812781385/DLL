@@ -13,36 +13,43 @@
 				<el-button 
 					icon="el-icon-circle-plus-outline"
 					@click="addData" 
-					type="primary" 
-					plain>新增
+					type="primary">新增
+				</el-button>
+				<el-button 
+					icon="el-icon-delete"
+					@click="deleteData" 
+					type="primary">删除
 				</el-button>
 				<el-button 
 					style="font-size:12px;"
-					class="iconfont i-png icon-daoru21"
+					icon="el-icon-upload2"
 					@click="importListFN"
-					type="primary"
-					plain>&nbsp;导入
+					type="primary">&nbsp;导入
 				</el-button>
 				<el-button 
 					style="font-size:12px;"
-					class="iconfont i-png icon-daochu"
+					icon="el-icon-download"
 					@click="exportListFN"
-					type="primary"
-					plain>&nbsp;导出
+					type="primary">&nbsp;导出
 				</el-button>
 			</div>
     	</div>
 		<el-table
 			:row-class-name="tableRowClassName"
+			@selection-change="selectionChange"
 			style="width: 100%"
+			size="mini"
 			:data="tableData"
 			class="tb-edit"
 			border>
 			<el-table-column
 				type="selection"
-				width="55">
+				width="55"
+				fixed>
 			</el-table-column>
 			<el-table-column
+				show-overflow-tooltip
+				align="center"
 				prop="username"
 				label="姓名">
 				<template slot-scope="{row,$index}">
@@ -57,6 +64,9 @@
 				</template>
 			</el-table-column>
 			<el-table-column
+				show-overflow-tooltip
+				width="130"
+				align="center"
 				prop="phone"
 				label="电话">
 				<template slot-scope="{row,$index}">
@@ -71,6 +81,8 @@
 				</template>
 			</el-table-column>
 			<el-table-column
+				show-overflow-tooltip
+				align="center"
 				prop="taxRate"
 				label="税率">
 				<template slot-scope="{row,$index}">
@@ -85,7 +97,9 @@
 				</template>
 			</el-table-column>
 			<el-table-column
+				show-overflow-tooltip
 				prop="unitSourcePrice"
+				align="center"
 				label="单价">
 				<template slot-scope="{row,$index}">
 					<div @dblclick="handleCellClick($index)" class="input-box">
@@ -99,7 +113,9 @@
 				</template>
 			</el-table-column>
 			<el-table-column
+				show-overflow-tooltip
 				prop="quantity"
+				align="center"
 				label="数量">
 				<template slot-scope="{row,$index}">
 					<div @dblclick="handleCellClick($index)" class="input-box">
@@ -113,19 +129,28 @@
 				</template>
 			</el-table-column>
 			<el-table-column
+				show-overflow-tooltip
 				prop="AmountIncludeTax"
+				align="center"
 				label="含税金额">
 			</el-table-column>
 			<el-table-column
+				show-overflow-tooltip
+				min-width="110"
 				prop="AmountWithoutTax"
+				align="center"
 				label="不含税金额">
 			</el-table-column>
 			<el-table-column
+				show-overflow-tooltip
 				prop="TaxAmount"
+				align="center"
 				label="税额">
 			</el-table-column>
 			<el-table-column
+				show-overflow-tooltip
 				prop="ispay"
+				align="center"
 				label="付款状态">
 				<template slot-scope="{row,$index}">
 					<div @dblclick="handleCellClick($index)" class="input-box">
@@ -139,7 +164,9 @@
 				</template>
 			</el-table-column>
 			<el-table-column
+				show-overflow-tooltip
 				prop="payment"
+				align="center"
 				label="付款方式">
 				<template slot-scope="{row,$index}">
 					<div @dblclick="handleCellClick($index)" class="input-box">
@@ -148,16 +175,22 @@
 							@blur="handleInputBlur($index, row, 'payment')" 
 							v-model="row.payment">
 						</el-input>
-						<span v-else>{{row.payment.payment}}</span>
+						<span v-else>{{row.payment}}</span>
 					</div>
 				</template>
 			</el-table-column>
 			<el-table-column
+				show-overflow-tooltip
+				min-width="110"
 				prop="createdAt"
+				align="center"
 				label="创建日期">
 			</el-table-column>
 			<el-table-column
+				show-overflow-tooltip
+				min-width="110"
 				prop="updatedAt"
+				align="center"
 				label="上次更新日期">
 			</el-table-column>
 		</el-table>
@@ -182,51 +215,40 @@ export default {
 			search_value: '',
 			addDataDialog: false,
 			add_data_template: initDataTemplate(),
-			rules: {
-				username: [{ 
-					required: true, 
-					message: '请输入名称', 
-					trigger: 'blur', 
-				}, { 
-					min: 2, 
-					max: 8, 
-					message: '长度在 2 到 8 个字符', 
-					trigger: 'blur',
-				}],
-				phone: [{
-					required: true,
-					message: '请输入手机号',
-					trigger: 'blur',
-				}, {
-					min: 11,
-					max: 11,
-					message: '长度为11个字符',
-					trigger: 'blur',
-				}],
-				unitSourcePrice: [{
-					required: true,
-					message: '请输入单价',
-					trigger: 'blur',
-				}],
-				taxRate: [{
-					required: true,
-					message: '请输税率',
-					trigger: 'blur',
-				}],
-				quantity: [{
-					required: true,
-					message: '请输数量',
-					trigger: 'blur',
-				}],
-	          	ispay: [{ 
-	          		required: true, 
-	          		message: '请选择付款状态', 
-	          		trigger: 'change',
-	          	}],
-	        },
+			selectionItem: [],
 		}
 	},
 	methods: {
+		selectionChange(arr){
+			arr.map(item=>{
+				this.selectionItem.push(item.objectId)
+			})
+		},
+		// 删除
+		deleteData(){
+			console.log(this.selectionItem);
+			this.axios.post("/delete",{
+				objectIds: this.selectionItem,
+			})
+				.then(res => {
+					console.log(res);
+					if(res.data.status !== 200){
+						this.$message({
+							message:'删除失败',
+							type:'error',
+							duration: 1500,
+						});
+						this.initData();
+					} else {
+						this.$message({
+							duration: 1500,
+				        	message: '删除成功',
+				        	type: 'success'
+				        });
+				        this.initData();
+					}
+				})
+		},
 		// 点击一行
 		handleCellClick(index){
 			console.log(index)
@@ -237,7 +259,6 @@ export default {
 		handleInputBlur(index, row, key){
 			this.editable[index] = false;
 			this.$set(this.editable,index,false);
-
 			this.axios.post("/update",{
 				key,
 				objectId: row.objectId,
@@ -245,13 +266,19 @@ export default {
 			})
 				.then(res=> {
 					console.log(res)
-					if(res.data.data.statusText !== 'ok'){
+					if(res.data.status !== 200){
 						this.$message({
-							message: '修改失败',
-							type: 'error',
-							center: true
+							message:'修改失败',
+							type:'error',
+							duration: 1500,
 						});
 						this.initData();
+					} else {
+						this.$message({
+							duration: 1500,
+				        	message: '修改成功',
+				        	type: 'success'
+				        });
 					}
 				})
 		},
@@ -269,7 +296,7 @@ export default {
 		initData(){
 			this.axios.get("/lists")
 				.then(res=> {
-					let arr = this.tableData = res.data.data.package.results;
+					let arr = this.tableData = res.data.data.package.results.reverse();
 					let len = arr.length;
 					this.editable = new Array(len);
 				})
@@ -278,14 +305,20 @@ export default {
 		addData(){
 			this.axios.post("/add")
 				.then(res=> {
-					if(res.data.data.status !== 201){
+					if(res.data.status !== 201){
 						this.$message({
-							message: '添加失败',
-							type: 'error',
-							center: true
-						});
+							duration: 1500,
+				        	message: '添加失败',
+				        	type: 'error'
+				        });
+					} else {
+						this.$message({
+							duration: 1500,
+				        	message: '添加成功',
+				        	type: 'success'
+				        });
+						this.initData();
 					}
-					console.log(arr)
 					// let len = arr.length;
 					// this.editable = new Array(len);
 				})
@@ -304,22 +337,15 @@ export default {
 			if (value === "") {
 				this.initData();
 			}else {
-				// this.axios.get(`/lists?where={"$or":[
-				// 	{"username":"${value}"},
-				// 	{"phone":"${value}"},
-				// 	{"taxRate":"${value}"},
-				// 	{"unitSourcePrice":"${value}"},
-				// 	{"quantity":"${value}"},
-				// 	{"AmountIncludeTax":"${value}"},
-				// 	{"AmountWithoutTax":"${value}"},
-				// 	{"TaxAmount":"${value}"},
-				// 	{"ispay":"${value}"},
-				// 	{"payment":"${value}"}]}`)
-				// 	.then(res=> {
-				// 		let arr = this.tableData = res.data.results;
-				// 		let len = arr.length;
-				// 		this.editable = new Array(len);
-				// })
+				this.axios.post("/query",{
+					value,
+				})
+					.then(res=> {
+						console.log(res);
+						let arr = this.tableData = res.data.package.results.reverse();
+						let len = arr.length;
+						this.editable = new Array(len);
+					})
 			}
 		},
 	}
@@ -343,6 +369,8 @@ function initDataTemplate(){
 <style scoped lang="scss">
 	#bill {
         padding: 20px;
+		align: center;
+
 		.add-data {
 		}
 		.box {
@@ -352,5 +380,8 @@ function initDataTemplate(){
 	}
 	.gongneng .el-input .el-input__icon {
 		// line-height: 28px!important;
+	}
+	.input-box {
+		min-height:20px;
 	}
 </style>

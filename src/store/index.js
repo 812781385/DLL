@@ -5,7 +5,7 @@ Vue.use(Vuex)
 
 export default new Vuex.Store({
 	state: {
-		marginLeft: '201px',
+		marginLeft: '150px',
 	},
 	mutations: {
 		SET_MARGIN_LEFT: (state, value) => {

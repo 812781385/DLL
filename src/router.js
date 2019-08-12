@@ -18,37 +18,55 @@ export default new Router({
     {
         path: '',
         component: Layout,
-        redirect: '/dashboard',
-        meta: {
-            name: '首页',
-        },
-        icon: 'homepage',
-        children: [{
-            path: 'dashboard',
-            component: dashboard,
-            meta: {
-                name: '首页 ',
-                role: ['Dashboard']
-            },
-        }],
-    },
-    {
-        path: '/finance',
-        component: Layout,
-        redirect: 'finance/bill',
+        redirect: '/bill',
         meta: {
             name: '财务管理',
         },
-        icon: 'financepage',
+        icon: 'homepage',
         children: [{
             path: 'bill',
             component: bill,
             meta: {
-                name: '账单中心',
-                role: ['bill']
+                name: '财务管理',
+                role: ['Dashboard']
             },
         }],
-    }, {
+    },
+    // {
+    //     path: '',
+    //     component: Layout,
+    //     redirect: '/dashboard',
+    //     meta: {
+    //         name: '首页',
+    //     },
+    //     icon: 'homepage',
+    //     children: [{
+    //         path: 'dashboard',
+    //         component: dashboard,
+    //         meta: {
+    //             name: '首页 ',
+    //             role: ['Dashboard']
+    //         },
+    //     }],
+    // },
+    // {
+    //     path: '/finance',
+    //     component: Layout,
+    //     redirect: 'finance/bill',
+    //     meta: {
+    //         name: '财务管理',
+    //     },
+    //     icon: 'financepage',
+    //     children: [{
+    //         path: 'bill',
+    //         component: bill,
+    //         meta: {
+    //             name: '账单中心',
+    //             role: ['bill']
+    //         },
+    //     }],
+    // }, 
+    {
         path: '/about',
         name: 'about',
         // route level code-splitting

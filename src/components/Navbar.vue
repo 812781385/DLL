@@ -1,7 +1,7 @@
 <template>
 	<div id="navbar">
 		<div class="header"> 
-			<h3>DLL系统管理平台</h3>
+			<!-- <h3>DLL系统管理平台</h3> -->
 			<div class="user">
 				<div class="userImg">
 					<img width="100%" src="http://image.wangrui8.top/FrMYft_wzjP1ywWfV1m_DzBUnTvJ" alt="">
