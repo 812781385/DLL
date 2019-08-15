@@ -3,34 +3,29 @@
 		<div class="header"> 
 			<!-- <h3>DLL系统管理平台</h3> -->
 			<div class="user">
-				<div class="userImg">
-					<img width="100%" src="http://image.wangrui8.top/FrMYft_wzjP1ywWfV1m_DzBUnTvJ" alt="">
-				</div>
-				<!-- <el-popover
+				<el-popover
 					placement="top-start"
+					v-model="visible2"
 					trigger="hover"
-					width="98">
-					<div class="but-menu">
+					ref="popover1"
+					width="200">
+					<p>安全退出登录？</p>
+					<div style="text-align: right; margin:0;">
 						<el-button 
-							@click="showPersonal"
-							size="mini" 
-							type="text">
-							<i class="iconfont icon-user icon-button"></i>
-							&nbsp;个人中心
+							type="text" 
+							@click="visible2 = false">
+							取消
 						</el-button>
 						<el-button 
-							size="mini" 
-							type="text">
-							<i class="iconfont icon-poweroff icon-exit"></i>
-							&nbsp;退出登录
+							type="primary" 
+							@click="affirm">
+							确定
 						</el-button>
 					</div>
-					<el-button 
-						type="text" 
-						slot="reference">
-						{{user}}<i class="el-icon-caret-bottom"></i>
-					</el-button>
-				</el-popover> -->
+				</el-popover>
+				<div class="userImg" v-popover:popover1>
+					<img width="100%" :src="imgUri" alt="">
+				</div>
 			</div>
 		</div>
 	</div>
@@ -40,6 +35,26 @@
 
 export default {
 	name: 'Navbar', 
+	created(){
+		console.log(this.username)
+		console.log(this.$store.state.useravatar)
+    },
+	data() {
+		return {
+			imgUri: this.$store.state.useravatar,
+			username: this.$store.state.username,
+			visible2: false,
+		}
+	},
+	methods: {
+		affirm(){
+			this.visible2 = false;
+			this.$store.dispatch('Logout');
+			this.$router.push({
+				path: '/login'
+			});
+		}
+	}
 }
 </script>
 

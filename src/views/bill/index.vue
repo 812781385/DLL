@@ -3,7 +3,7 @@
 		<!-- 功能按钮 -->
 		<div class="gongneng">
     		<el-input
-			    placeholder="请输入关键字进行查询"
+			    placeholder="请输入姓名或电话进行查询"
 			    prefix-icon="el-icon-search"
 			    v-model="search_value"
 			    @change="changeValue"
@@ -16,18 +16,19 @@
 					type="primary">新增
 				</el-button>
 				<el-button 
+					:disabled="selectionItem.length<1"
 					icon="el-icon-delete"
 					@click="deleteData" 
 					type="primary">删除
 				</el-button>
 				<el-button 
-					style="font-size:12px;"
+					:disabled="selectionItem.length<1"
 					icon="el-icon-upload2"
 					@click="importListFN"
 					type="primary">&nbsp;导入
 				</el-button>
 				<el-button 
-					style="font-size:12px;"
+					:disabled="selectionItem.length<1"
 					icon="el-icon-download"
 					@click="exportListFN"
 					type="primary">&nbsp;导出
@@ -37,6 +38,7 @@
 		<el-table
 			:row-class-name="tableRowClassName"
 			@selection-change="selectionChange"
+			@cell-dblclick="handleCellClick"
 			style="width: 100%"
 			size="mini"
 			:data="tableData"
@@ -53,10 +55,12 @@
 				prop="username"
 				label="姓名">
 				<template slot-scope="{row,$index}">
-					<div @dblclick="handleCellClick($index)" class="input-box">
+					<div class="input-box">
 						<el-input 
-							v-if="editable[$index]" 
-							@blur="handleInputBlur($index, row, 'username')" 
+							type="textarea"
+							class="textarea-input"
+							v-if="row.usernameflag" 
+							@blur="handleInputBlur(row, 'username')" 
 							v-model="row.username">
 						</el-input>
 						<span v-else>{{row.username}}</span>
@@ -70,10 +74,11 @@
 				prop="phone"
 				label="电话">
 				<template slot-scope="{row,$index}">
-					<div @dblclick="handleCellClick($index)" class="input-box">
+					<div class="input-box">
 						<el-input 
-							v-if="editable[$index]" 
-							@blur="handleInputBlur($index, row, 'phone')" 
+							type="textarea"
+							v-if="row.phoneflag" 
+							@blur="handleInputBlur(row, 'phone')" 
 							v-model="row.phone">
 						</el-input>
 						<span v-else>{{row.phone}}</span>
@@ -86,10 +91,11 @@
 				prop="taxRate"
 				label="税率">
 				<template slot-scope="{row,$index}">
-					<div @dblclick="handleCellClick($index)" class="input-box">
+					<div class="input-box">
 						<el-input 
-							v-if="editable[$index]" 
-							@blur="handleInputBlur($index, row, 'taxRate')" 
+							type="textarea"
+							v-if="row.taxRateflag" 
+							@blur="handleInputBlur(row, 'taxRate')" 
 							v-model="row.taxRate">
 						</el-input>
 						<span v-else>{{row.taxRate}}</span>
@@ -102,10 +108,11 @@
 				align="center"
 				label="单价">
 				<template slot-scope="{row,$index}">
-					<div @dblclick="handleCellClick($index)" class="input-box">
+					<div class="input-box">
 						<el-input 
-							v-if="editable[$index]" 
-							@blur="handleInputBlur($index, row, 'unitSourcePrice')" 
+							type="textarea"
+							v-if="row.unitSourcePriceflag" 
+							@blur="handleInputBlur(row, 'unitSourcePrice')" 
 							v-model="row.unitSourcePrice">
 						</el-input>
 						<span v-else>{{row.unitSourcePrice}}</span>
@@ -118,10 +125,11 @@
 				align="center"
 				label="数量">
 				<template slot-scope="{row,$index}">
-					<div @dblclick="handleCellClick($index)" class="input-box">
+					<div class="input-box">
 						<el-input 
-							v-if="editable[$index]" 
-							@blur="handleInputBlur($index, row, 'quantity')" 
+							type="textarea"
+							v-if="row.quantityflag" 
+							@blur="handleInputBlur(row, 'quantity')" 
 							v-model="row.quantity">
 						</el-input>
 						<span v-else>{{row.quantity}}</span>
@@ -132,20 +140,23 @@
 				show-overflow-tooltip
 				prop="AmountIncludeTax"
 				align="center"
-				label="含税金额">
+				label="含税金额"
+				disabled>
 			</el-table-column>
 			<el-table-column
 				show-overflow-tooltip
 				min-width="110"
 				prop="AmountWithoutTax"
 				align="center"
-				label="不含税金额">
+				label="不含税金额"
+				disabled>
 			</el-table-column>
 			<el-table-column
 				show-overflow-tooltip
 				prop="TaxAmount"
 				align="center"
-				label="税额">
+				label="税额"
+				disabled>
 			</el-table-column>
 			<el-table-column
 				show-overflow-tooltip
@@ -153,10 +164,11 @@
 				align="center"
 				label="付款状态">
 				<template slot-scope="{row,$index}">
-					<div @dblclick="handleCellClick($index)" class="input-box">
+					<div class="input-box">
 						<el-input 
-							v-if="editable[$index]" 
-							@blur="handleInputBlur($index, row, 'ispay')" 
+							type="textarea"
+							v-if="row.ispayflag" 
+							@blur="handleInputBlur(row, 'ispay')" 
 							v-model="row.ispay">
 						</el-input>
 						<span v-else>{{row.ispay}}</span>
@@ -169,10 +181,11 @@
 				align="center"
 				label="付款方式">
 				<template slot-scope="{row,$index}">
-					<div @dblclick="handleCellClick($index)" class="input-box">
+					<div class="input-box">
 						<el-input 
-							v-if="editable[$index]" 
-							@blur="handleInputBlur($index, row, 'payment')" 
+							type="textarea"
+							v-if="row.paymentflag" 
+							@blur="handleInputBlur(row, 'payment')" 
 							v-model="row.payment">
 						</el-input>
 						<span v-else>{{row.payment}}</span>
@@ -184,14 +197,16 @@
 				min-width="110"
 				prop="createdAt"
 				align="center"
-				label="创建日期">
+				label="创建日期"
+				disabled>
 			</el-table-column>
 			<el-table-column
 				show-overflow-tooltip
 				min-width="110"
 				prop="updatedAt"
 				align="center"
-				label="上次更新日期">
+				label="上次更新日期"
+				disabled>
 			</el-table-column>
 		</el-table>
 	</div>
@@ -219,10 +234,15 @@ export default {
 		}
 	},
 	methods: {
+		// 选择
 		selectionChange(arr){
-			arr.map(item=>{
-				this.selectionItem.push(item.objectId)
+			let newarr = [];
+			arr.map(item=> {
+				newarr.push({
+					objectId:item.objectId
+				})
 			})
+			this.selectionItem = newarr;
 		},
 		// 删除
 		deleteData(){
@@ -250,15 +270,17 @@ export default {
 				})
 		},
 		// 点击一行
-		handleCellClick(index){
-			console.log(index)
-			this.editable[index] = true;
-			this.$set(this.editable,index,true);
+		handleCellClick(row, column, cell, event){
+			let key = column.property;
+			row[key+'flag'] = true;
+			setTimeout(()=>{
+				document.querySelector('.el-textarea__inner').focus();
+			}, 100);
+			
 		},
 		// 失去焦点
-		handleInputBlur(index, row, key){
-			this.editable[index] = false;
-			this.$set(this.editable,index,false);
+		handleInputBlur(row, key){
+			row[key+'flag'] = false;
 			this.axios.post("/update",{
 				key,
 				objectId: row.objectId,
@@ -296,9 +318,15 @@ export default {
 		initData(){
 			this.axios.get("/lists")
 				.then(res=> {
-					let arr = this.tableData = res.data.data.package.results.reverse();
-					let len = arr.length;
-					this.editable = new Array(len);
+					let result = res.data.data.package.results.reverse();
+					
+					result.map(item=>{
+						Object.keys(result[0]).map(key=>{
+							item[key+'flag'] = false;
+						})
+					});
+					this.tableData = result;
+					console.log(this.tableData)
 				})
 		},
 		// 新增
@@ -318,6 +346,7 @@ export default {
 				        	type: 'success'
 				        });
 						this.initData();
+						this.search_value ='';
 					}
 					// let len = arr.length;
 					// this.editable = new Array(len);
@@ -330,7 +359,17 @@ export default {
 		},
 		// 批量导出
 		exportListFN(){
-
+			let userlist = this.selectionItem;
+			console.log(userlist)
+			this.axios.post("/exportexcel", {
+				userlist,
+			})
+				.then(res =>{
+					console.log(res.data.url)
+					let link = document.getElementById('excel.xlsx');
+					link.href = res.data.url; 
+					link.click();
+				})
 		},
 		// 搜索
 		changeValue(value){
@@ -383,5 +422,12 @@ function initDataTemplate(){
 	}
 	.input-box {
 		min-height:20px;
+	}
+	.textarea-input {
+		position: absolute;
+		min-width: 100px;
+		left: 0;
+		top: 0;
+		z-index: 99999999;
 	}
 </style>

@@ -2,6 +2,7 @@
 
 import Vue from 'vue';
 import axios from "axios";
+import store from '../store';
 
 // Full config:  https://github.com/axios/axios#request-config
 // axios.defaults.baseURL = process.env.baseURL || process.env.apiUrl || '';
@@ -11,7 +12,7 @@ import axios from "axios";
 let config = {
 	baseURL: 'http://123.56.22.198:7001/DLL',
 	// baseURL: process.env.baseURL,
-	timeout: 60 * 1000, // Timeout
+	timeout: 60 * 700, // Timeout
 	// withCredentials: true, // Check cross-site Access-Control
 };
 
@@ -20,6 +21,9 @@ const _axios = axios.create(config);
 _axios.interceptors.request.use(
 	function(config) {
 		// Do something before request is sent
+		if (store.state.token) {
+			config.headers['authorization'] = `token ${store.state.token}`;
+		}
 		return config;
 	},
 	function(error) {
